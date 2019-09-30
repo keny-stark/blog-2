@@ -1,8 +1,9 @@
-
 {% extends 'base.html' %}
 
 {% block title %}Create Comment{% endblock %}
-
+{% block menu %}
+        <li><a href="{% url 'comment_view' %}" class="btn btn4">Comments</a></li>
+{% endblock %}
 {% block content %}
     <h1>Create Comment</h1>
     <form method="POST" action="{% url 'comment_add' %}">

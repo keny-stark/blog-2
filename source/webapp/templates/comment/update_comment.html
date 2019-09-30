@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
 {% block title %}Update Comment{% endblock %}
-
+{% block menu %}
+        <li><a href="{% url 'comment_view' %}">Comments</a></li>
+{% endblock %}
 
 {% block content %}
     <h1>Update Comment</h1>
