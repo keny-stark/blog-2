@@ -51,13 +51,33 @@ class ArticleView(DetailView):
     model = Article
     context_object_name = 'article'
 
+
+    def get(self, request, *args, **kwargs):
+        self.form = self.get_search_form()
+        self.search_query = self.get_search_query()
+        return super().get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
+        queryset = super().get_queryset()
+        if self.search_query:
+            queryset = queryset.filter(
+                Q(tags__name__iexact=self.search_query)
+            )
+            return queryset
         context = super().get_context_data(**kwargs)
         context['form'] = ArticleCommentForm()
         context['tags'] = ArticleTagForm()
         comments = context['article'].comments.order_by('-created_at')
         self.paginate_comments_to_context(comments, context)
         return context
+
+    def get_search_form(self):
+        return SimpleSearchForm(self.request.GET)
+
+    def get_search_query(self):
+        if self.form.is_valid():
+            return self.form.cleaned_data['search']
+        return None
 
     def paginate_comments_to_context(self, comments, context):
         paginator = Paginator(comments, 3, 0)

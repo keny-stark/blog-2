@@ -5,9 +5,6 @@
 {% block menu %}
     <li><a href="{% url "article_update" article.pk %}" class="btn btn1">Edit</a></li>
     <li><a href="{% url "article_delete" article.pk %}" class="btn btn4">Delete</a></li>
-    {% if article.is_active %}
-        <li><a href="#add_comment" class="btn btn2">Add Comment</a></li>
-    {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -17,7 +14,7 @@
     <div class="pre">{{ article.text }}</div>
     <p>Tags</p>
     {% for tag in article.tags.all %}
-        <a href="{% url 'index' %}" class="btn btn4">{{ tag }}</a>
+        <a href="{% url 'index' %}" type="search" class="btn btn4">{{ tag }}</a>
     {% endfor %}
     <hr/>
     <h3>Comments:</h3>
