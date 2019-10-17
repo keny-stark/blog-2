@@ -1,5 +1,5 @@
 from django import forms
-from webapp.models import Article, Comment
+from webapp.models import Article, Comment, Tag
 
 
 class ArticleForm(forms.ModelForm):
@@ -8,11 +8,13 @@ class ArticleForm(forms.ModelForm):
         exclude = ['created_at', 'updated_at']
 
 
-class CommentForm(forms.ModelForm):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.fields['article'].queryset = Article.objects.oll
+class ArticleTagForm(forms.ModelForm):
+    class Meta:
+        model = Tag
+        exclude = ['created_at']
 
+
+class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         exclude = ['created_at', 'updated_at']

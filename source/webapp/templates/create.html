@@ -6,5 +6,6 @@
     <h1>Create Article</h1>
     <form method="POST" action="{% url 'article_add' %}">
         {% include 'partial/form.html' with button_text="Create" %}
+        <a href="{% url 'create_new_tag' %}" class="action-btn">new tag</a>
     </form>
 {% endblock %}

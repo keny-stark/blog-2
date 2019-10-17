@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Create nwe tag</h1>
+    <form method="POST" action="{% url 'create_new_tag' %}">
+        {% include 'partial/form.html' with button_text="Create" %}
+    </form>
+
+{% endblock %}

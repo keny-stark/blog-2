@@ -4,8 +4,8 @@ from django.utils.http import urlencode
 from django.views.generic import ListView, DetailView, CreateView, \
     UpdateView, DeleteView
 
-from webapp.forms import ArticleForm, ArticleCommentForm, SimpleSearchForm
-from webapp.models import Article
+from webapp.forms import ArticleForm, ArticleCommentForm, SimpleSearchForm, ArticleTagForm
+from webapp.models import Article, Tag
 from django.core.paginator import Paginator
 
 
@@ -25,7 +25,7 @@ class IndexView(ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(object_list=object_list, **kwargs)
         if self.search_query:
-            context['query'] = urlencode({'search': self.search_query})
+            context['query'] = urlencode({'tag': self.search_query})
         context['form'] = self.form
         return context
 
@@ -33,8 +33,7 @@ class IndexView(ListView):
         queryset = super().get_queryset()
         if self.search_query:
             queryset = queryset.filter(
-                Q(title__icontains=self.search_query)
-                | Q(author__icontains=self.search_query)
+                 Q(tags__name__iexact=self.search_query)
             )
         return queryset
 
@@ -55,6 +54,7 @@ class ArticleView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = ArticleCommentForm()
+        context['tags'] = ArticleTagForm()
         comments = context['article'].comments.order_by('-created_at')
         self.paginate_comments_to_context(comments, context)
         return context
@@ -76,6 +76,13 @@ class ArticleCreateView(CreateView):
 
     def get_success_url(self):
         return reverse('article_view', kwargs={'pk': self.object.pk})
+
+
+class TagForArticleCreateView(CreateView):
+    template_name = 'create_tag.html'
+    form_class = ArticleTagForm
+    model = Tag
+    success_url = reverse_lazy('article_add')
 
 
 class ArticleUpdateView(UpdateView):
